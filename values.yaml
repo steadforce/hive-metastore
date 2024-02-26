@@ -1,5 +1,5 @@
 image:
-  repository: bitsondatadev/hive-metastore
+  repository: ghcr.io/bitsondatadev/hive-metastore
   tag: latest
   pullPolicy: IfNotPresent
 
