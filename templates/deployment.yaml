@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "hive-metastore.fullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hive-metastore.labels" . | nindent 4 }}
 spec:
@@ -19,12 +18,23 @@ spec:
     spec:
       initContainers:
         - name: expand-configs
-          image: tempire/alpine-perl:3.14.0
+          image: perl:devel-slim-threaded-bullseye
           command:
             - sh
           args:
             - -c
             - cp /tmp/hive-site.xml /opt/hive-configs/ && perl -pi -e 's/\${env:([_A-Z0-9]+)}/$ENV{$1}/g' /opt/hive-configs/hive-site.xml
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.spec.databases.hivemetastore }}.{{ .Values.db.name }}.credentials.postgresql.acid.zalan.do"
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.db.spec.databases.hivemetastore }}.{{ .Values.db.name }}.credentials.postgresql.acid.zalan.do"
+                key: password
           volumeMounts:
           - name: hive-config-map
             mountPath: /tmp/hive-site.xml
@@ -57,6 +67,10 @@ spec:
           env:
             - name: HIVE_CONF_DIR
               value: /opt/hive-configs
+            - name: METASTORE_TYPE
+              value: {{ .Values.env.dbtype }}
+            - name: METASTORE_DB_HOSTNAME
+              value: {{ .Values.env.dbhost }}
           volumeMounts:
             - name: hive-configs
               mountPath: /opt/hive-configs

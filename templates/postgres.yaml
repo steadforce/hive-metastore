@@ -1,0 +1,17 @@
+{{- if .Capabilities.APIVersions.Has "acid.zalan.do/v1" }}
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: {{ .Values.db.name }}
+spec:
+  teamId: {{ .Values.db.spec.teamId }}
+  volume:
+    size: {{ .Values.db.spec.volume.size }}
+  numberOfInstances: {{ .Values.db.spec.numberOfInstances }}
+  users:
+    {{- toYaml .Values.db.spec.users | nindent 4 }}
+  databases:
+    {{- toYaml .Values.db.spec.databases | nindent 4 }}
+  postgresql:
+    version: "15"
+{{- end }}
