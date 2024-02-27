@@ -1,3 +1,18 @@
+db:
+  name: &dbname metastore-postgresql-cluster
+  spec:
+    teamId: "metastore"
+    volume:
+      size: 1Gi
+    numberOfInstances: 1
+    users:
+      admin:
+      - superuser
+      - createdb
+      hive: []
+    databases:
+      hivemetastore: hive
+
 image:
   repository: ghcr.io/bitsondatadev/hive-metastore
   tag: latest
@@ -47,19 +62,4 @@ hiveSiteXml: |
 
 env:
   dbtype: postgres
-  dbhost: metastore-postgresql-cluster
-
-db:
-  name: metastore-postgresql-cluster
-  spec:
-    teamId: "metastore"
-    volume:
-      size: 1Gi
-    numberOfInstances: 1
-    users:
-      admin:
-      - superuser
-      - createdb
-      hive: []
-    databases:
-      hivemetastore: hive
+  dbhost: *dbname
