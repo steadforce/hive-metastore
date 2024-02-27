@@ -1,0 +1,13 @@
+{{- if .Capabilities.APIVersions.Has "security.istio.io/v1beta1" }}
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: hive
+spec:
+  selector:
+    matchLabels:
+      {{- include "hive-metastore.selectorLabels" . | nindent 6 }}
+  portLevelMtls:
+     {{ .Values.service.port }}:
+      mode: PERMISSIVE
+{{- end }}

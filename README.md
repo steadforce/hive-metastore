@@ -28,6 +28,7 @@ The following command renders the charts like argo-cd does to validate the conte
 ```
  helm template --release-name hive-metastore -n hive-metastore --skip-tests \
   -a acid.zalan.do/v1 \
+  -a security.istio.io/v1beta1 \
   --output-dir _render/local . 
 ```
 
