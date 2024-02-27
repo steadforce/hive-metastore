@@ -9,7 +9,9 @@ db:
       admin:
       - superuser
       - createdb
-      hive: []
+      hive:
+      - createdb
+      - superuser
     databases:
       hivemetastore: hive
 
